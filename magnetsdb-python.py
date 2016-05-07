@@ -17,10 +17,11 @@ def request(a):
 	conn = sqlite3.connect(CONST['PATH_TO_DB'])
 	sorting_field = 'caption'
 	order_by = 'asc'
-	offset = (int(a['page']) - 1) * 10
+	limit = CONST['limit']
+	offset = (int(a['page']) - 1) * int(limit)
 	cursor = conn.execute(
-		"SELECT category, caption, labels, hash from data WHERE caption LIKE '%{}%' ORDER BY {} {} LIMIT 10 OFFSET {}".format(
-			a['request'], sorting_field, order_by, offset))
+		"SELECT category, caption, labels, hash from data WHERE caption LIKE '%{}%' ORDER BY {} {} LIMIT {} OFFSET {}".format(
+			a['request'], sorting_field, order_by, limit, offset))
 	table_data = [['Num', 'Category', 'Caption', 'Labels', 'Hash']]
 	num = 0
 	for row in cursor:
@@ -59,7 +60,8 @@ CONST = {
 	"REPEAT" : "repeat",
 	"QUIT" : "quit",
 	"PATH_TO_DB" : "F:\magnetsdb\main-sqlite.db",
-	"app"	: "qbittorrent.exe"
+	"app"	: "qbittorrent.exe",
+	"limit" : 40
 	}
 
 print(CONST['SEARCH_ACTION'])
